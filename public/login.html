@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MediLife</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body class="auth-page">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">MediLife</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <a href="register.html" class="btn btn-outline-primary">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-shell">
+        <section class="auth-panel shadow-sm">
+            <div class="mb-4">
+                <p class="text-primary fw-semibold mb-1">Welcome back</p>
+                <h1 class="h3 fw-bold mb-2">Sign in to MEDILIFE</h1>
+                <p class="text-muted mb-0">Access your dashboard with your registered account.</p>
+            </div>
+
+            <div id="authAlert" class="alert d-none"></div>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" id="email" class="form-control" placeholder="admin@medilife.com" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+
+            <div class="auth-divider"><span>or</span></div>
+            <div id="googleSignIn" class="google-signin"></div>
+            <p id="googleSignInHelp" class="small text-muted text-center d-none mt-2">
+                Google login is available after adding a Google Client ID in settings.
+            </p>
+
+            <p class="text-center text-muted mt-4 mb-0">
+                New to MEDILIFE? <a href="register.html">Create an account</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

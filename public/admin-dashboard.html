@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | MediLife</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body class="admin-page">
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white" id="sidebar">
+            <div class="p-4"><h4>MediLife Admin</h4></div>
+            <div class="list-group list-group-flush">
+                <a href="#" onclick="showSection('dashboard')" class="nav-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
+                <a href="#" onclick="showSection('patients')" class="nav-link"><i class="fas fa-user-injured me-2"></i> Patients</a>
+                <a href="#" onclick="showSection('doctors')" class="nav-link"><i class="fas fa-user-md me-2"></i> Doctors</a>
+                <a href="#" onclick="showSection('appointments')" class="nav-link"><i class="fas fa-calendar-check me-2"></i> Appointments</a>
+                <a href="#" onclick="showSection('emr')" class="nav-link"><i class="fas fa-file-medical me-2"></i> EMR</a>
+                <a href="#" onclick="showSection('billing')" class="nav-link"><i class="fas fa-file-invoice-dollar me-2"></i> Billing</a>
+                <a href="#" onclick="showSection('reports')" class="nav-link"><i class="fas fa-chart-line me-2"></i> Reports</a>
+                <a href="#" onclick="showSection('locations')" class="nav-link"><i class="fas fa-hospital me-2"></i> Locations</a>
+                <a href="#" onclick="showSection('security')" class="nav-link"><i class="fas fa-shield-alt me-2"></i> Security</a>
+                <a href="#" onclick="logout()" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="w-100">
+            <nav class="navbar navbar-light bg-white border-bottom p-3">
+                <span class="navbar-brand mb-0 h1">Dashboard Overview</span>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <span id="adminName" class="fw-bold text-primary"></span>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <div id="dashboardError" class="alert alert-danger d-none"></div>
+
+                <!-- Stats Row -->
+                <div id="dashboard-stats" class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card p-3 shadow-sm card-stats">
+                            <h6>Total Patients</h6>
+                            <h2 id="count-patients">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 shadow-sm border-left-success" style="border-left: 5px solid #28a745;">
+                            <h6>Total Doctors</h6>
+                            <h2 id="count-doctors">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 shadow-sm" style="border-left: 5px solid #ffc107;">
+                            <h6>Appointments</h6>
+                            <h2 id="count-appointments">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card p-3 shadow-sm" style="border-left: 5px solid #6f42c1;">
+                            <h6>Staff</h6>
+                            <h2 id="count-staff">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="hms-overview" class="hms-module-grid">
+                    <article class="hms-module-card" onclick="showSection('appointments')">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>Appointment Management</h3>
+                        <p>Approve, cancel, and track patient appointment requests.</p>
+                    </article>
+                    <article class="hms-module-card" onclick="showSection('emr')">
+                        <i class="fas fa-file-medical"></i>
+                        <h3>Electronic Medical Records</h3>
+                        <p>Review patient profiles, visit reason, history, and notes.</p>
+                    </article>
+                    <article class="hms-module-card" onclick="showSection('billing')">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <h3>Billing & Insurance</h3>
+                        <p>Estimate billing totals from approved and completed care.</p>
+                    </article>
+                    <article class="hms-module-card" onclick="showSection('reports')">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Reports & Analytics</h3>
+                        <p>See operational activity, appointment status, and capacity.</p>
+                    </article>
+                    <article class="hms-module-card" onclick="showSection('locations')">
+                        <i class="fas fa-hospital"></i>
+                        <h3>Multi-Location</h3>
+                        <p>View services across main hospital, emergency, and clinic units.</p>
+                    </article>
+                    <article class="hms-module-card" onclick="showSection('security')">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Security & Compliance</h3>
+                        <p>Role-based access protects patient and hospital data.</p>
+                    </article>
+                </div>
+
+                <!-- Patients Section (Hidden by default, shown via JS) -->
+                <div id="patients-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Patient Management</h5>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal">Add Patient</button>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" id="patientSearch" class="form-control mb-3" placeholder="Search patients...">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Blood Group</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientTableBody">
+                                <!-- Data injected via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="doctors-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Doctor Directory</h5>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Specialization</th>
+                                    <th>Department</th>
+                                    <th>Availability</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctorTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="appointments-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Appointment Requests</h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="loadAppointments()">Refresh</button>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="emr-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Electronic Medical Records</h5>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Contact</th>
+                                    <th>Blood Group</th>
+                                    <th>Medical History</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emrTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="billing-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Billing & Insurance Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <div class="mini-stat">
+                                    <span>Approved Visits</span>
+                                    <strong id="billing-approved">0</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mini-stat">
+                                    <span>Estimated Revenue</span>
+                                    <strong id="billing-revenue">LKR 0</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mini-stat">
+                                    <span>Insurance Claims</span>
+                                    <strong id="billing-claims">0</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-0">Billing is calculated from approved and completed appointment activity. Full invoice entry can be expanded from this module.</p>
+                    </div>
+                </div>
+
+                <div id="reports-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Reporting & Analytics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="reportCards" class="report-grid"></div>
+                    </div>
+                </div>
+
+                <div id="locations-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Multi-Location Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="location-grid">
+                            <article>
+                                <h6>Main Hospital</h6>
+                                <p>Outpatient appointments, EMR, billing, and reporting.</p>
+                            </article>
+                            <article>
+                                <h6>Emergency Wing</h6>
+                                <p>Urgent care queue, patient intake, and fast appointment coordination.</p>
+                            </article>
+                            <article>
+                                <h6>Specialist Clinic</h6>
+                                <p>Cardiology, neurology, dental, and follow-up visits.</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="security-section" class="card shadow-sm d-none">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Security & Compliance</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="security-list">
+                            <div><i class="fas fa-user-lock"></i><span>Role-based access for admin, staff, doctor, and patient dashboards.</span></div>
+                            <div><i class="fas fa-key"></i><span>JWT-secured API routes for private hospital data.</span></div>
+                            <div><i class="fas fa-envelope-circle-check"></i><span>Email confirmation support for patient appointment updates.</span></div>
+                            <div><i class="fas fa-cloud"></i><span>Cloud-ready environment configuration for Google login and SMTP.</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="patientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="addPatientForm">
+                    <div class="modal-header"><h5>Add New Patient</h5></div>
+                    <div class="modal-body">
+                        <input type="text" id="p_name" class="form-control mb-2" placeholder="Full Name" required>
+                        <input type="email" id="p_email" class="form-control mb-2" placeholder="Email" required>
+                        <input type="text" id="p_phone" class="form-control mb-2" placeholder="Phone">
+                        <select id="p_gender" class="form-select mb-2">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Patient</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
