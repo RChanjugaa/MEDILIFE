@@ -26,45 +26,62 @@
         <div id="dashboardAlert" class="alert alert-danger d-none"></div>
         <div class="dashboard-heading mb-4">
             <h1 class="h3 fw-bold mb-1">Patient Dashboard</h1>
-            <p class="text-muted mb-0">Browse available doctors and check appointment activity.</p>
+            <p class="text-muted mb-0">Book appointments and view only your own medical updates.</p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3"><div class="card stat-card"><span>My Appointments</span><strong id="appointmentCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card status-pending"><span>Pending</span><strong id="pendingCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card status-approved"><span>Approved</span><strong id="approvedCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card status-completed"><span>Completed</span><strong id="completedCount">0</strong></div></div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">My Profile</h2></div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Name:</strong> <span id="profileName"></span></p>
+                        <p class="mb-2"><strong>Email:</strong> <span id="profileEmail"></span></p>
+                        <p class="mb-2"><strong>Phone:</strong> <span id="profilePhone"></span></p>
+                        <p class="mb-0"><strong>Blood Group:</strong> <span id="profileBlood"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Book Appointment</h2></div>
+                    <div class="card-body">
+                        <form id="patientBookingForm" class="row g-3">
+                            <div class="col-md-4"><select id="bookingDoctor" class="form-select" required></select></div>
+                            <div class="col-md-3"><input type="date" id="bookingDate" class="form-control" required></div>
+                            <div class="col-md-3"><input type="time" id="bookingTime" class="form-control" required></div>
+                            <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Book</button></div>
+                            <div class="col-12"><textarea id="bookingReason" class="form-control" rows="2" placeholder="Reason for visit"></textarea></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4">
-            <div class="col-lg-5">
+            <div class="col-xl-5">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h2 class="h5 mb-0">Available Doctors</h2>
-                    </div>
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Available Doctors</h2></div>
                     <div class="card-body table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Specialty</th>
-                                    <th>Availability</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Name</th><th>Specialty</th><th>Department</th><th>Availability</th></tr></thead>
                             <tbody id="doctorTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7">
+            <div class="col-xl-7">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h2 class="h5 mb-0">Appointments</h2>
-                        <span class="badge bg-primary" id="appointmentCount">0</span>
-                    </div>
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">My Appointments</h2></div>
                     <div class="card-body table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Doctor</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Doctor</th><th>Date</th><th>Reason</th><th>Status</th><th>Diagnosis</th><th>Prescription</th></tr></thead>
                             <tbody id="appointmentTableBody"></tbody>
                         </table>
                     </div>

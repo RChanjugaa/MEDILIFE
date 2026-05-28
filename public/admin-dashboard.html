@@ -5,283 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | MediLife</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="CSS/style.css">
 </head>
-<body class="admin-page">
-    <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
-        <div class="bg-dark text-white" id="sidebar">
-            <div class="p-4"><h4>MediLife Admin</h4></div>
-            <div class="list-group list-group-flush">
-                <a href="#" onclick="showSection('dashboard')" class="nav-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
-                <a href="#" onclick="showSection('patients')" class="nav-link"><i class="fas fa-user-injured me-2"></i> Patients</a>
-                <a href="#" onclick="showSection('doctors')" class="nav-link"><i class="fas fa-user-md me-2"></i> Doctors</a>
-                <a href="#" onclick="showSection('appointments')" class="nav-link"><i class="fas fa-calendar-check me-2"></i> Appointments</a>
-                <a href="#" onclick="showSection('emr')" class="nav-link"><i class="fas fa-file-medical me-2"></i> EMR</a>
-                <a href="#" onclick="showSection('billing')" class="nav-link"><i class="fas fa-file-invoice-dollar me-2"></i> Billing</a>
-                <a href="#" onclick="showSection('reports')" class="nav-link"><i class="fas fa-chart-line me-2"></i> Reports</a>
-                <a href="#" onclick="showSection('locations')" class="nav-link"><i class="fas fa-hospital me-2"></i> Locations</a>
-                <a href="#" onclick="showSection('security')" class="nav-link"><i class="fas fa-shield-alt me-2"></i> Security</a>
-                <a href="#" onclick="logout()" class="nav-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+<body class="admin-page" data-role="admin">
+    <div class="d-flex admin-shell" id="wrapper">
+        <aside id="sidebar" class="admin-sidebar">
+            <div class="p-4">
+                <h4 class="mb-1">MediLife</h4>
+                <small>Admin Panel</small>
             </div>
-        </div>
+            <nav class="list-group list-group-flush">
+                <a href="#" class="nav-link active" data-section-link="dashboard"><i class="fas fa-home me-2"></i> Dashboard</a>
+                <a href="#" class="nav-link" data-section-link="patients"><i class="fas fa-user-injured me-2"></i> Patients</a>
+                <a href="#" class="nav-link" data-section-link="doctors"><i class="fas fa-user-md me-2"></i> Doctors</a>
+                <a href="#" class="nav-link" data-section-link="staff"><i class="fas fa-user-nurse me-2"></i> Staff</a>
+                <a href="#" class="nav-link" data-section-link="appointments"><i class="fas fa-calendar-check me-2"></i> Appointments</a>
+                <a href="#" class="nav-link" data-section-link="users"><i class="fas fa-users-cog me-2"></i> Users & Roles</a>
+                <a href="#" class="nav-link" data-section-link="reports"><i class="fas fa-chart-line me-2"></i> Reports</a>
+                <a href="#" class="nav-link" data-section-link="settings"><i class="fas fa-gear me-2"></i> Settings</a>
+                <a href="#" class="nav-link text-danger" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+            </nav>
+        </aside>
 
-        <!-- Page Content -->
         <div id="page-content-wrapper" class="w-100">
-            <nav class="navbar navbar-light bg-white border-bottom p-3">
-                <span class="navbar-brand mb-0 h1">Dashboard Overview</span>
+            <nav class="navbar navbar-light bg-white border-bottom px-4 py-3">
+                <div>
+                    <span class="navbar-brand mb-0 h1">Admin Dashboard</span>
+                    <div class="small text-muted">Manage patients, care teams, appointments, and access.</div>
+                </div>
                 <div class="d-flex align-items-center gap-3">
                     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
                         <i class="fa-solid fa-moon"></i>
                     </button>
                     <span id="adminName" class="fw-bold text-primary"></span>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
                 </div>
             </nav>
 
-            <div class="container-fluid p-4">
+            <main class="container-fluid p-4">
                 <div id="dashboardError" class="alert alert-danger d-none"></div>
+                <div id="dashboardSuccess" class="alert alert-success d-none"></div>
 
-                <!-- Stats Row -->
-                <div id="dashboard-stats" class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card p-3 shadow-sm card-stats">
-                            <h6>Total Patients</h6>
-                            <h2 id="count-patients">0</h2>
-                        </div>
+                <section id="dashboard-section" class="admin-section">
+                    <div class="row g-3 mb-4" id="dashboard-stats">
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card"><span>Total Patients</span><strong id="count-patients">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card"><span>Total Doctors</span><strong id="count-doctors">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card"><span>Total Staff</span><strong id="count-staff">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card"><span>Total Appointments</span><strong id="count-appointments">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card status-pending"><span>Pending</span><strong id="count-pending">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card status-approved"><span>Approved</span><strong id="count-approved">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card status-completed"><span>Completed</span><strong id="count-completed">0</strong></div></div>
+                        <div class="col-md-3 col-xl-3"><div class="card stat-card status-cancelled"><span>Cancelled</span><strong id="count-cancelled">0</strong></div></div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card p-3 shadow-sm border-left-success" style="border-left: 5px solid #28a745;">
-                            <h6>Total Doctors</h6>
-                            <h2 id="count-doctors">0</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card p-3 shadow-sm" style="border-left: 5px solid #ffc107;">
-                            <h6>Appointments</h6>
-                            <h2 id="count-appointments">0</h2>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card p-3 shadow-sm" style="border-left: 5px solid #6f42c1;">
-                            <h6>Staff</h6>
-                            <h2 id="count-staff">0</h2>
-                        </div>
-                    </div>
-                </div>
 
-                <div id="hms-overview" class="hms-module-grid">
-                    <article class="hms-module-card" onclick="showSection('appointments')">
-                        <i class="fas fa-calendar-check"></i>
-                        <h3>Appointment Management</h3>
-                        <p>Approve, cancel, and track patient appointment requests.</p>
-                    </article>
-                    <article class="hms-module-card" onclick="showSection('emr')">
-                        <i class="fas fa-file-medical"></i>
-                        <h3>Electronic Medical Records</h3>
-                        <p>Review patient profiles, visit reason, history, and notes.</p>
-                    </article>
-                    <article class="hms-module-card" onclick="showSection('billing')">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        <h3>Billing & Insurance</h3>
-                        <p>Estimate billing totals from approved and completed care.</p>
-                    </article>
-                    <article class="hms-module-card" onclick="showSection('reports')">
-                        <i class="fas fa-chart-pie"></i>
-                        <h3>Reports & Analytics</h3>
-                        <p>See operational activity, appointment status, and capacity.</p>
-                    </article>
-                    <article class="hms-module-card" onclick="showSection('locations')">
-                        <i class="fas fa-hospital"></i>
-                        <h3>Multi-Location</h3>
-                        <p>View services across main hospital, emergency, and clinic units.</p>
-                    </article>
-                    <article class="hms-module-card" onclick="showSection('security')">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>Security & Compliance</h3>
-                        <p>Role-based access protects patient and hospital data.</p>
-                    </article>
-                </div>
-
-                <!-- Patients Section (Hidden by default, shown via JS) -->
-                <div id="patients-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Patient Management</h5>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#patientModal">Add Patient</button>
+                    <div class="quick-actions mb-4">
+                        <button class="btn btn-primary" data-open-modal="patient"><i class="fas fa-plus me-2"></i>Add Patient</button>
+                        <button class="btn btn-primary" data-open-modal="doctor"><i class="fas fa-plus me-2"></i>Add Doctor</button>
+                        <button class="btn btn-primary" data-open-modal="staff"><i class="fas fa-plus me-2"></i>Add Staff</button>
+                        <button class="btn btn-outline-primary" data-section-link="appointments"><i class="fas fa-calendar me-2"></i>View Appointments</button>
                     </div>
-                    <div class="card-body">
-                        <input type="text" id="patientSearch" class="form-control mb-3" placeholder="Search patients...">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Blood Group</th>
-                                </tr>
-                            </thead>
-                            <tbody id="patientTableBody">
-                                <!-- Data injected via AJAX -->
-                            </tbody>
+
+                    <div class="row g-4">
+                        <div class="col-xl-7">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white"><h2 class="h5 mb-0">Recent Appointments</h2></div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+                                        <tbody id="recentAppointmentTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white"><h2 class="h5 mb-0">Recently Added Patients</h2></div>
+                                <div class="card-body table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+                                        <tbody id="recentPatientTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="patients-section" class="admin-section d-none">
+                    <div class="section-toolbar">
+                        <h2 class="h4 mb-0">Patient Management</h2>
+                        <button class="btn btn-primary" data-open-modal="patient">Add Patient</button>
+                    </div>
+                    <input type="text" id="patientSearch" class="form-control search-input" placeholder="Search patients...">
+                    <div class="card shadow-sm"><div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Gender</th><th>Blood</th><th>Actions</th></tr></thead>
+                            <tbody id="patientTableBody"></tbody>
                         </table>
-                    </div>
-                </div>
+                    </div></div>
+                </section>
 
-                <div id="doctors-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Doctor Directory</h5>
+                <section id="doctors-section" class="admin-section d-none">
+                    <div class="section-toolbar">
+                        <h2 class="h4 mb-0">Doctor Management</h2>
+                        <button class="btn btn-primary" data-open-modal="doctor">Add Doctor</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Specialization</th>
-                                    <th>Department</th>
-                                    <th>Availability</th>
-                                </tr>
-                            </thead>
+                    <input type="text" id="doctorSearch" class="form-control search-input" placeholder="Search doctors...">
+                    <div class="card shadow-sm"><div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Specialization</th><th>Department</th><th>Availability</th><th>Status</th><th>Actions</th></tr></thead>
                             <tbody id="doctorTableBody"></tbody>
                         </table>
-                    </div>
-                </div>
+                    </div></div>
+                </section>
 
-                <div id="appointments-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Appointment Requests</h5>
-                        <button class="btn btn-outline-primary btn-sm" onclick="loadAppointments()">Refresh</button>
+                <section id="staff-section" class="admin-section d-none">
+                    <div class="section-toolbar">
+                        <h2 class="h4 mb-0">Staff Management</h2>
+                        <button class="btn btn-primary" data-open-modal="staff">Add Staff</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Doctor</th>
-                                    <th>Date</th>
-                                    <th>Reason</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+                    <input type="text" id="staffSearch" class="form-control search-input" placeholder="Search staff...">
+                    <div class="card shadow-sm"><div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Position</th><th>Department</th><th>Shift</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="staffTableBody"></tbody>
+                        </table>
+                    </div></div>
+                </section>
+
+                <section id="appointments-section" class="admin-section d-none">
+                    <div class="section-toolbar">
+                        <h2 class="h4 mb-0">Appointment Management</h2>
+                        <button class="btn btn-outline-primary" id="refreshAppointments">Refresh</button>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4"><select id="appointmentStatusFilter" class="form-select"><option value="">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+                        <div class="col-md-4"><select id="appointmentDoctorFilter" class="form-select"><option value="">All doctors</option></select></div>
+                    </div>
+                    <div class="card shadow-sm"><div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
                             <tbody id="appointmentTableBody"></tbody>
                         </table>
-                    </div>
-                </div>
+                    </div></div>
+                </section>
 
-                <div id="emr-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Electronic Medical Records</h5>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Contact</th>
-                                    <th>Blood Group</th>
-                                    <th>Medical History</th>
-                                </tr>
-                            </thead>
-                            <tbody id="emrTableBody"></tbody>
+                <section id="users-section" class="admin-section d-none">
+                    <div class="section-toolbar"><h2 class="h4 mb-0">Users & Roles</h2></div>
+                    <div class="card shadow-sm"><div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+                            <tbody id="userTableBody"></tbody>
                         </table>
-                    </div>
-                </div>
+                    </div></div>
+                </section>
 
-                <div id="billing-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Billing & Insurance Overview</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <div class="mini-stat">
-                                    <span>Approved Visits</span>
-                                    <strong id="billing-approved">0</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mini-stat">
-                                    <span>Estimated Revenue</span>
-                                    <strong id="billing-revenue">LKR 0</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mini-stat">
-                                    <span>Insurance Claims</span>
-                                    <strong id="billing-claims">0</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-muted mb-0">Billing is calculated from approved and completed appointment activity. Full invoice entry can be expanded from this module.</p>
-                    </div>
-                </div>
+                <section id="reports-section" class="admin-section d-none">
+                    <div class="section-toolbar"><h2 class="h4 mb-0">Reports</h2></div>
+                    <div id="reportCards" class="report-grid"></div>
+                </section>
 
-                <div id="reports-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Reporting & Analytics</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="reportCards" class="report-grid"></div>
-                    </div>
-                </div>
-
-                <div id="locations-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Multi-Location Management</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="location-grid">
-                            <article>
-                                <h6>Main Hospital</h6>
-                                <p>Outpatient appointments, EMR, billing, and reporting.</p>
-                            </article>
-                            <article>
-                                <h6>Emergency Wing</h6>
-                                <p>Urgent care queue, patient intake, and fast appointment coordination.</p>
-                            </article>
-                            <article>
-                                <h6>Specialist Clinic</h6>
-                                <p>Cardiology, neurology, dental, and follow-up visits.</p>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="security-section" class="card shadow-sm d-none">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Security & Compliance</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="security-list">
-                            <div><i class="fas fa-user-lock"></i><span>Role-based access for admin, staff, doctor, and patient dashboards.</span></div>
-                            <div><i class="fas fa-key"></i><span>JWT-secured API routes for private hospital data.</span></div>
-                            <div><i class="fas fa-envelope-circle-check"></i><span>Email confirmation support for patient appointment updates.</span></div>
-                            <div><i class="fas fa-cloud"></i><span>Cloud-ready environment configuration for Google login and SMTP.</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <section id="settings-section" class="admin-section d-none">
+                    <div class="card shadow-sm"><div class="card-body">
+                        <h2 class="h5">Settings</h2>
+                        <p class="text-muted mb-0">Environment settings such as MongoDB, JWT, Google login, and SMTP are managed from the project `.env` file.</p>
+                    </div></div>
+                </section>
+            </main>
         </div>
     </div>
 
-    <!-- Add Patient Modal -->
-    <div class="modal fade" id="patientModal" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal fade" id="recordModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form id="addPatientForm">
-                    <div class="modal-header"><h5>Add New Patient</h5></div>
+                <form id="recordForm">
+                    <div class="modal-header">
+                        <h5 id="recordModalTitle" class="modal-title">Record</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <div class="modal-body">
-                        <input type="text" id="p_name" class="form-control mb-2" placeholder="Full Name" required>
-                        <input type="email" id="p_email" class="form-control mb-2" placeholder="Email" required>
-                        <input type="text" id="p_phone" class="form-control mb-2" placeholder="Phone">
-                        <select id="p_gender" class="form-select mb-2">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
+                        <input type="hidden" id="recordType">
+                        <input type="hidden" id="recordId">
+                        <div id="recordFields" class="row g-3"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Patient</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

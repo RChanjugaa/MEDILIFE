@@ -670,6 +670,90 @@ body {
     padding-left: 16px;
 }
 
+.admin-sidebar {
+    background: linear-gradient(180deg, #113f4d 0%, #0f2f3a 100%) !important;
+}
+
+.admin-sidebar small {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.admin-sidebar .nav-link {
+    border-left: 4px solid transparent;
+}
+
+.admin-sidebar .nav-link.active,
+.admin-sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--secondary);
+    color: #fff;
+}
+
+.admin-section {
+    animation: fadeIn 0.16s ease;
+}
+
+.section-toolbar,
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.quick-actions {
+    justify-content: flex-start;
+}
+
+.search-input {
+    max-width: 420px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    min-height: 118px;
+    padding: 20px;
+    border-left: 5px solid var(--primary) !important;
+    box-shadow: var(--shadow);
+}
+
+.stat-card span {
+    color: var(--muted);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.stat-card strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--ink);
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.stat-card.status-pending {
+    border-left-color: #ffc107 !important;
+}
+
+.stat-card.status-approved {
+    border-left-color: var(--primary) !important;
+}
+
+.stat-card.status-completed {
+    border-left-color: var(--secondary) !important;
+}
+
+.stat-card.status-cancelled {
+    border-left-color: #dc3545 !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
     #wrapper {
         display: block !important;

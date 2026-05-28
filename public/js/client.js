@@ -19,6 +19,12 @@ $(document).ready(function() {
 
     $.get('/api/public/doctors', fillDoctorSelects);
 
+    $('[data-book-appointment]').on('click', function(e) {
+        e.preventDefault();
+        document.getElementById('appointmentForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        $('#bookingName').trigger('focus');
+    });
+
     $('#quickBookingForm').on('submit', function(e) {
         e.preventDefault();
         $('#bookingDoctor').val($('#quickDoctor').val());

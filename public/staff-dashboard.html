@@ -26,46 +26,81 @@
         <div id="dashboardAlert" class="alert alert-danger d-none"></div>
         <div class="dashboard-heading mb-4">
             <h1 class="h3 fw-bold mb-1">Staff Dashboard</h1>
-            <p class="text-muted mb-0">Track patient records and appointment activity.</p>
+            <p class="text-muted mb-0">Front-desk tools for patients and appointments. Delete and user management are admin-only.</p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3"><div class="card stat-card"><span>Patients</span><strong id="patientCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card"><span>Appointments</span><strong id="appointmentCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card status-pending"><span>Pending</span><strong id="pendingCount">0</strong></div></div>
+            <div class="col-md-3"><div class="card stat-card status-approved"><span>Approved</span><strong id="approvedCount">0</strong></div></div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Basic Patient Registration</h2></div>
+                    <div class="card-body">
+                        <form id="staffPatientForm" class="row g-3">
+                            <input type="hidden" id="staffPatientId">
+                            <div class="col-md-6"><input id="staffPatientName" class="form-control" placeholder="Full name" required></div>
+                            <div class="col-md-6"><input id="staffPatientEmail" type="email" class="form-control" placeholder="Email" required></div>
+                            <div class="col-md-4"><input id="staffPatientPhone" class="form-control" placeholder="Phone"></div>
+                            <div class="col-md-4"><input id="staffPatientAge" type="number" class="form-control" placeholder="Age"></div>
+                            <div class="col-md-4"><select id="staffPatientGender" class="form-select"><option>Other</option><option>Male</option><option>Female</option></select></div>
+                            <div class="col-12"><input id="staffPatientAddress" class="form-control" placeholder="Address"></div>
+                            <div class="col-12"><button class="btn btn-primary" type="submit">Save Patient</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Schedule Appointment</h2></div>
+                    <div class="card-body">
+                        <form id="staffAppointmentForm" class="row g-3">
+                            <div class="col-md-6"><select id="staffAppointmentPatient" class="form-select" required></select></div>
+                            <div class="col-md-6"><select id="staffAppointmentDoctor" class="form-select" required></select></div>
+                            <div class="col-md-4"><input id="staffAppointmentDate" type="date" class="form-control" required></div>
+                            <div class="col-md-4"><input id="staffAppointmentTime" type="time" class="form-control" required></div>
+                            <div class="col-md-4"><button class="btn btn-primary w-100" type="submit">Schedule</button></div>
+                            <div class="col-12"><textarea id="staffAppointmentReason" class="form-control" rows="2" placeholder="Reason"></textarea></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4">
-            <div class="col-lg-5">
+            <div class="col-xl-4">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h2 class="h5 mb-0">Patients</h2>
-                    </div>
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Patients</h2></div>
                     <div class="card-body table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Edit</th></tr></thead>
                             <tbody id="patientTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7">
+            <div class="col-xl-4">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h2 class="h5 mb-0">Appointments</h2>
-                        <span class="badge bg-primary" id="appointmentCount">0</span>
-                    </div>
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Appointments</h2></div>
                     <div class="card-body table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Doctor</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th><th>Reason</th><th>Actions</th></tr></thead>
                             <tbody id="appointmentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><h2 class="h5 mb-0">Doctor Availability</h2></div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead><tr><th>Name</th><th>Specialty</th><th>Department</th><th>Availability</th></tr></thead>
+                            <tbody id="doctorTableBody"></tbody>
                         </table>
                     </div>
                 </div>

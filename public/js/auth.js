@@ -15,6 +15,7 @@ $(document).ready(function() {
         localStorage.setItem('token', response.token);
         localStorage.setItem('role', response.role);
         localStorage.setItem('userName', response.name);
+        localStorage.setItem('userId', response._id);
     }
 
     function showAuthError(message) {
@@ -23,6 +24,16 @@ $(document).ready(function() {
             .addClass('alert-danger')
             .text(message || 'Something went wrong. Please try again.');
     }
+
+    function setSubmitLoading(formSelector, isLoading) {
+        const button = $(`${formSelector} button[type="submit"]`);
+        button.prop('disabled', isLoading);
+        button.text(isLoading ? 'Please wait...' : button.data('label'));
+    }
+
+    $('#loginForm button[type="submit"], #registerForm button[type="submit"]').each(function() {
+        $(this).data('label', $(this).text());
+    });
 
     window.handleGoogleCredential = function(response) {
         $.ajax({
@@ -67,6 +78,7 @@ $(document).ready(function() {
     // Handle Login
     $('#loginForm').on('submit', function(e) {
         e.preventDefault();
+        setSubmitLoading('#loginForm', true);
         const data = {
             email: $('#email').val(),
             password: $('#password').val()
@@ -83,6 +95,7 @@ $(document).ready(function() {
             },
             error: function(err) {
                 showAuthError(err.responseJSON && err.responseJSON.message);
+                setSubmitLoading('#loginForm', false);
             }
         });
     });
@@ -90,11 +103,13 @@ $(document).ready(function() {
     // Handle Registration
     $('#registerForm').on('submit', function(e) {
         e.preventDefault();
+        setSubmitLoading('#registerForm', true);
         const password = $('#password').val();
         const confirmPassword = $('#confirmPassword').val();
 
         if (password !== confirmPassword) {
             showAuthError('Passwords do not match.');
+            setSubmitLoading('#registerForm', false);
             return;
         }
 
@@ -116,6 +131,7 @@ $(document).ready(function() {
             },
             error: function(err) {
                 showAuthError(err.responseJSON && err.responseJSON.message);
+                setSubmitLoading('#registerForm', false);
             }
         });
     });
