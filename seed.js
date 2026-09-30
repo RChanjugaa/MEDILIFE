@@ -6,24 +6,25 @@ const Patient = require('./models/Patient');
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URI);
+const weekdaySlots = (startTime, endTime, slotDurationMin = 30) =>
+    [1, 2, 3, 4, 5].map((dayOfWeek) => ({ dayOfWeek, startTime, endTime, slotDurationMin }));
 
 const seedData = async () => {
     try {
-        // Clear existing users
-        await User.deleteMany();
+        await mongoose.connect(process.env.MONGO_URI);
 
-        // Create Admin
+        await User.deleteMany({ email: 'admin@medilife.com' });
         await User.create({
             name: 'System Admin',
             email: 'admin@medilife.com',
-            password: 'admin123', // Will be hashed by the User model pre-save hook
+            password: 'admin123',
             role: 'admin'
         });
 
         await Doctor.collection.dropIndex('doctorId_1').catch(() => {});
         await Patient.collection.dropIndex('username_1').catch(() => {});
         await Patient.collection.dropIndex('patientId_1').catch(() => {});
+
         await Doctor.deleteMany();
         await Doctor.insertMany([
             {
@@ -32,7 +33,8 @@ const seedData = async () => {
                 phone: '011-555-1030',
                 specialization: 'Cardiologist',
                 department: 'Cardiology',
-                availability: '09:00 AM - 03:00 PM'
+                availability: '09:00 - 15:00',
+                availabilitySlots: weekdaySlots('09:00', '15:00', 30)
             },
             {
                 fullName: 'Dr. Nimal Perera',
@@ -40,7 +42,8 @@ const seedData = async () => {
                 phone: '011-555-1040',
                 specialization: 'General Physician',
                 department: 'General Medicine',
-                availability: '10:00 AM - 05:00 PM'
+                availability: '10:00 - 17:00',
+                availabilitySlots: weekdaySlots('10:00', '17:00', 30)
             },
             {
                 fullName: 'Dr. Asha Silva',
@@ -48,12 +51,13 @@ const seedData = async () => {
                 phone: '011-555-1050',
                 specialization: 'Neurologist',
                 department: 'Neurology',
-                availability: '09:00 AM - 01:00 PM'
+                availability: '09:00 - 13:00',
+                availabilitySlots: weekdaySlots('09:00', '13:00', 30)
             }
         ]);
 
-        console.log('Database Seeded! Admin Login: admin@medilife.com / admin123');
-        process.exit();
+        console.log('Database seeded. Admin login: admin@medilife.com / admin123');
+        process.exit(0);
     } catch (err) {
         console.error(err);
         process.exit(1);
